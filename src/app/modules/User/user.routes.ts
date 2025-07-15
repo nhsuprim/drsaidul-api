@@ -16,33 +16,7 @@ router.post(
         return userControllers.createAdmin(req, res, next);
     }
 );
-router.post(
-    "/create-captain",
-    auth("ADMIN", "SUPERADMIN"),
-    fileUploader.upload.single("file"),
-    (req: Request, res: Response, next: NextFunction) => {
-        req.body = userValidation.createCaptain.parse(
-            JSON.parse(req.body.data)
-        );
 
-        return userControllers.createCaptain(req, res, next);
-    }
-);
-router.post(
-    "/create-player",
-    // auth("ADMIN", "SUPERADMIN"),
-    fileUploader.upload.array("files", 3), // Allow up to 3 files, adjust the number as needed
-    (req: Request, res: Response, next: NextFunction) => {
-        try {
-            req.body = userValidation.createPlayer.parse(
-                JSON.parse(req.body.data)
-            );
-            return userControllers.createPlayer(req, res, next);
-        } catch (error) {
-            next(error);
-        }
-    }
-);
 router.patch(
     "/change-password/:id",
     auth("ADMIN", "SUPERADMIN"),

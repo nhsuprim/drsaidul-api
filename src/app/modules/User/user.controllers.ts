@@ -14,40 +14,6 @@ const createAdmin = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-const createCaptain = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    try {
-        const result = await userServices.createCaptain(req);
-        res.status(200).json({
-            success: true,
-            message: "Captain created successfully",
-            data: result,
-        });
-    } catch (error) {
-        next(error); // Forward the error to error-handling middleware
-    }
-};
-
-const createPlayer = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    try {
-        const result = await userServices.createPlayer(req);
-        res.status(200).json({
-            success: true,
-            message: "Player created successfully",
-            data: result,
-        });
-    } catch (error) {
-        next(error); // Forward the error to error-handling middleware
-    }
-};
-
 const getAdmin = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await userServices.getAdmin();
@@ -85,8 +51,6 @@ const changePassword = async (
 
 export const userControllers = {
     createAdmin,
-    createCaptain,
-    createPlayer,
     getAdmin,
     changePassword,
 };

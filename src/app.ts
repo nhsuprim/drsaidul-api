@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req: Request, res: Response) => {
     res.send({
-        Message: "Mirhazirbag Premier League server..",
+        Message: "Dr Saidul Islam Server..",
     });
 });
 

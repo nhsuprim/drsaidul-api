@@ -11,7 +11,7 @@ const client_1 = require("@prisma/client");
 const router = express_1.default.Router();
 router.post("/login", auth_controllers_1.AuthController.logInUser);
 router.get("/refresh-token", auth_controllers_1.AuthController.refreshToken);
-router.get("/change-password", (0, authMiddleware_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.CAPTAIN, client_1.UserRole.PLAYER), auth_controllers_1.AuthController.changePassword);
+router.get("/change-password", (0, authMiddleware_1.default)(client_1.UserRole.ADMIN), auth_controllers_1.AuthController.changePassword);
 router.get("/forget-password", auth_controllers_1.AuthController.forgetPassword);
 router.get("/reset-password", auth_controllers_1.AuthController.resetPassword);
 exports.AuthRoutes = router;
