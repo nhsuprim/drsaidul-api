@@ -15,32 +15,6 @@ const createAdmin = async (req, res, next) => {
         next(error); // Forward the error to error-handling middleware
     }
 };
-const createCaptain = async (req, res, next) => {
-    try {
-        const result = await user_services_1.userServices.createCaptain(req);
-        res.status(200).json({
-            success: true,
-            message: "Captain created successfully",
-            data: result,
-        });
-    }
-    catch (error) {
-        next(error); // Forward the error to error-handling middleware
-    }
-};
-const createPlayer = async (req, res, next) => {
-    try {
-        const result = await user_services_1.userServices.createPlayer(req);
-        res.status(200).json({
-            success: true,
-            message: "Player created successfully",
-            data: result,
-        });
-    }
-    catch (error) {
-        next(error); // Forward the error to error-handling middleware
-    }
-};
 const getAdmin = async (req, res, next) => {
     try {
         const result = await user_services_1.userServices.getAdmin();
@@ -74,8 +48,6 @@ const changePassword = async (req, res, next) => {
 };
 exports.userControllers = {
     createAdmin,
-    createCaptain,
-    createPlayer,
     getAdmin,
     changePassword,
 };

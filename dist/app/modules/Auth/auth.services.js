@@ -62,7 +62,6 @@ const logInUser = async (payload) => {
     };
 };
 const refreshToken = async (token) => {
-    // implement logic to refresh token
     let decodedData;
     try {
         decodedData = jsonwebtoken_1.default.verify(token, RefreshTokenJwtSecret);
