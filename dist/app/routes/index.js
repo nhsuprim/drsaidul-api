@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const user_routes_1 = require("../modules/User/user.routes");
 const auth_routes_1 = require("../modules/Auth/auth.routes");
+const captain_routes_1 = require("../modules/Captain/captain.routes");
+const player_routes_1 = require("../modules/Player/player.routes");
+const team_routes_1 = require("../modules/Team/team.routes");
 const admin_routes_1 = require("../modules/Admin/admin.routes");
-const disService_routes_1 = require("../modules/DisService/disService.routes");
-const appointment_route_1 = require("../modules/Appointment/appointment.route");
-const testimonial_routes_1 = require("../modules/Testimonial/testimonial.routes");
 const router = express_1.default.Router();
 const moduleRoutes = [
     {
@@ -21,16 +21,16 @@ const moduleRoutes = [
         route: auth_routes_1.AuthRoutes,
     },
     {
-        path: "/services",
-        route: disService_routes_1.serviceRoutes,
+        path: "/captain",
+        route: captain_routes_1.captainRoutes,
     },
     {
-        path: "/testimonial",
-        route: testimonial_routes_1.testimonialRoutes,
+        path: "/player",
+        route: player_routes_1.playerRoutes,
     },
     {
-        path: "/appointment",
-        route: appointment_route_1.appointmentRoutes,
+        path: "/team",
+        route: team_routes_1.teamRoutes,
     },
     {
         path: "/admin",

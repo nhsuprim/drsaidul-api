@@ -19,6 +19,12 @@ const addServiceSchema = z.object({
     description: z.string({
         required_error: "Service description is required",
     }),
+    amount: z.string({
+        required_error: "Service amount is required",
+    }),
+    amountMonthly: z.string({
+        required_error: "Service monthly amount is required",
+    }),
     image: z.string().url().optional(), // Ensures a valid URL for the image
     questions: z.array(questionSchema, {
         required_error: "At least one question is required",

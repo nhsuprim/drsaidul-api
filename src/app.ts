@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req: Request, res: Response) => {
     res.send({
-        Message: "Dr Saidul Islam Server..",
+        Message: "DR. Saidul Islam",
     });
 });
 

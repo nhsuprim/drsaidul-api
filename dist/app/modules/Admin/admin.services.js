@@ -30,6 +30,75 @@ exports.adminService = void 0;
 const prisma_1 = __importDefault(require("../../shared/prisma"));
 const bcrypt = __importStar(require("bcrypt"));
 const client_1 = require("@prisma/client");
+const deleteCaptain = async (id) => {
+    await prisma_1.default.captain.findUniqueOrThrow({
+        where: {
+            id,
+        },
+    });
+    const result = await prisma_1.default.$transaction(async (transactionClient) => {
+        const captainDeletedData = await transactionClient.captain.delete({
+            where: {
+                id,
+            },
+        });
+        await transactionClient.user.delete({
+            where: {
+                email: captainDeletedData.email,
+            },
+        });
+        return captainDeletedData;
+    });
+    return result;
+};
+const deletePlayer = async (id) => {
+    await prisma_1.default.player.findUniqueOrThrow({
+        where: {
+            id,
+        },
+    });
+    const result = await prisma_1.default.$transaction(async (transactionClient) => {
+        const playerDeletedData = await transactionClient.player.delete({
+            where: {
+                id,
+            },
+        });
+        await transactionClient.user.delete({
+            where: {
+                email: playerDeletedData.email,
+            },
+        });
+        return playerDeletedData;
+    });
+    return result;
+};
+const deleteTeam = async (id) => {
+    const result = await prisma_1.default.team.delete({
+        where: { id },
+    });
+    return result;
+};
+const confirmPlayer = async (id) => {
+    const player = await prisma_1.default.player.update({
+        where: { id },
+        data: { isConfirmed: true },
+        include: {
+            team: true,
+        },
+    });
+    return player;
+};
+const requestPlayer = async () => {
+    const player = await prisma_1.default.player.findMany({
+        where: {
+            isConfirmed: false,
+        },
+        include: {
+            team: true,
+        },
+    });
+    return player;
+};
 const createSuperAdmin = async (payload) => {
     const hashedPassword = await bcrypt.hash(payload.password, 12);
     const userData = {
@@ -57,5 +126,10 @@ const createSuperAdmin = async (payload) => {
     }
 };
 exports.adminService = {
+    deleteCaptain,
+    deletePlayer,
+    confirmPlayer,
+    deleteTeam,
     createSuperAdmin,
+    requestPlayer,
 };

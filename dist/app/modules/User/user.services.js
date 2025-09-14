@@ -31,6 +31,7 @@ const client_1 = require("@prisma/client");
 const fileUploaders_1 = require("../../helpers/fileUploaders");
 const prisma_1 = __importDefault(require("../../shared/prisma"));
 const bcrypt = __importStar(require("bcrypt"));
+const ApiError_1 = __importDefault(require("../../erros/ApiError"));
 const createAdmin = async (req) => {
     const file = req.file;
     if (file) {
@@ -60,6 +61,84 @@ const createAdmin = async (req) => {
     });
     return result;
 };
+const createCaptain = async (req) => {
+    const file = req.file;
+    if (file) {
+        const uploadToCloudinary = await fileUploaders_1.fileUploader.uploadToCloudinary(file);
+        req.body.captain.image = uploadToCloudinary?.secure_url;
+    }
+    const hashedPassword = await bcrypt.hash(req.body.password, 12);
+    const userData = {
+        email: req.body.captain.email,
+        password: hashedPassword,
+        role: client_1.UserRole.CAPTAIN,
+    };
+    const result = await prisma_1.default.$transaction(async (transactionClient) => {
+        const user = await transactionClient.user.create({
+            data: userData,
+        });
+        const createCaptainData = await transactionClient.captain.create({
+            data: {
+                name: req.body.captain.name,
+                email: req.body.captain.email,
+                image: req.body.captain.image,
+                contactNumber: req.body.captain.contactNumber,
+                user: { connect: { id: user.id } },
+            },
+        });
+        return createCaptainData;
+    });
+    return result;
+};
+const createPlayer = async (req) => {
+    const files = req.files;
+    const existingUser = await prisma_1.default.user.findUnique({
+        where: { email: req.body.player.email },
+    });
+    if (existingUser) {
+        throw new ApiError_1.default(500, "Email already exists");
+    }
+    const imageUrls = [];
+    if (files && files.length > 0) {
+        for (const file of files) {
+            const uploadToCloudinary = await fileUploaders_1.fileUploader.uploadToCloudinary(file);
+            if (uploadToCloudinary?.secure_url) {
+                imageUrls.push(uploadToCloudinary.secure_url);
+            }
+        }
+    }
+    const hashedPassword = await bcrypt.hash(req.body.password, 12);
+    if (!req.body.player) {
+        throw new Error("Player data is required");
+    }
+    const userData = {
+        email: req.body.player.email,
+        password: hashedPassword,
+        role: client_1.UserRole.PLAYER,
+    };
+    const result = await prisma_1.default.$transaction(async (transactionClient) => {
+        const user = await transactionClient.user.create({
+            data: userData,
+        });
+        const createPlayerData = await transactionClient.player.create({
+            data: {
+                name: req.body.player.name,
+                email: req.body.player.email,
+                images: imageUrls,
+                contactNumber: req.body.player.contactNumber,
+                address: req.body.player.address,
+                age: req.body.player.age,
+                battingOrder: req.body.player.battingOrder,
+                bowlingType: req.body.player.bowlingType,
+                auctionStatus: req.body.player.auctionStatus,
+                transactionNumber: req.body.player.transactionNumber,
+                user: { connect: { id: user.id } },
+            },
+        });
+        return createPlayerData;
+    });
+    return result;
+};
 const changePassword = async (id, payload) => {
     // console.log(password);
     const hashedPassword = await bcrypt.hash(payload.password, 12);
@@ -76,6 +155,8 @@ const getAdmin = async () => {
 };
 exports.userServices = {
     createAdmin,
+    createCaptain,
+    createPlayer,
     getAdmin,
     changePassword,
 };

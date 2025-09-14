@@ -13,15 +13,18 @@ const addService = async (req: Request, user: any) => {
         imageUrl = uploadToCloudinary?.secure_url;
     }
 
-    const questionsData = req.body.questions.map((question: any) => ({
-        question: question.question,
-        answerType: question.answerType,
-        option: {
-            create: question.options?.map((option: any) => ({
-                label: option,
-            })),
-        },
-    }));
+    const questionsData = req.body.questions.map(
+        (question: any, index: number) => ({
+            question: question.question,
+            answerType: question.answerType,
+            order: index + 1,
+            option: {
+                create: question.options?.map((option: any) => ({
+                    label: option,
+                })),
+            },
+        })
+    );
 
     // 🔥 Transaction starts AFTER all async work is done
     const result = await prisma.$transaction(async (transactionClient) => {
@@ -29,6 +32,8 @@ const addService = async (req: Request, user: any) => {
             data: {
                 name: req.body.name,
                 description: req.body.description,
+                amount: req.body.amount,
+                amountMonthly: req.body.amountMonthly,
                 image: imageUrl, // 🟢 Use pre-uploaded image URL
                 questions: {
                     create: questionsData, // 🟢 Use pre-processed questions
@@ -68,6 +73,9 @@ const getServiceById = async (id: string) => {
             questions: {
                 include: {
                     option: true,
+                },
+                orderBy: {
+                    order: "asc", // 👈 ensures serial order
                 },
             },
         },

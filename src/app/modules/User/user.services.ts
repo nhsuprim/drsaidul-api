@@ -61,6 +61,7 @@ const getAdmin = async () => {
 
 export const userServices = {
     createAdmin,
+
     getAdmin,
     changePassword,
 };

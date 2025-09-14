@@ -32,18 +32,21 @@ model Admin {
 }
 
 model Service {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
-  name        String        @unique
-  description String
-  image       String?
-  questions   Question[]
-  appointment Appointment[]
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  name          String        @unique
+  description   String
+  amount        String
+  amountMonthly String
+  image         String?
+  questions     Question[]
+  appointment   Appointment[]
 }
 
 model Question {
   id         String     @id @default(auto()) @map("_id") @db.ObjectId
   serviceId  String     @db.ObjectId
   question   String
+  order      Int
   answerType AnswerType
   option     Option[]
   service    Service    @relation(fields: [serviceId], references: [id])
@@ -64,8 +67,8 @@ model Option {
 model Answer {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   questionId String   @db.ObjectId
-  textAnswer String? 
-  optionId   String?  @db.ObjectId 
+  textAnswer String?
+  optionId   String?  @db.ObjectId
   question   Question @relation(fields: [questionId], references: [id])
   option     Option?  @relation(fields: [optionId], references: [id])
 }
@@ -73,7 +76,7 @@ model Answer {
 model Appointment {
   id        String            @id @default(auto()) @map("_id") @db.ObjectId
   name      String
-  email     String
+  email     String?
   phone     String?
   address   String
   note      String?
@@ -96,7 +99,7 @@ model Form {
 }
 
 model Testimonial {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   serviceName String
   address     String
@@ -104,8 +107,8 @@ model Testimonial {
   comment     String
   date        String
   image       String?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Diary {
@@ -116,18 +119,17 @@ model Diary {
   newDate       DateTime?
   note          String?
   createdAt     DateTime          @default(now())
-  
-  updatedAt     DateTime          @updatedAt
-  appointment   Appointment       @relation(fields: [appointmentId], references: [id])
+
+  updatedAt   DateTime    @updatedAt
+  appointment Appointment @relation(fields: [appointmentId], references: [id])
 }
 
 model Review {
-   id            String            @id @default(auto()) @map("_id") @db.ObjectId
-   name          String
-   image         String?
-   text          String
-   rating        String
-
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  name   String
+  image  String?
+  text   String
+  rating String
 }
 
 enum AppointmentStatus {
